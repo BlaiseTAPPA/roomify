@@ -2,6 +2,8 @@ import { ArrowRight, ArrowUpRight, Clock, Layers } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import type { Route } from "./+types/home";
 import Button from "../../components/ui/Button";
+import Upload from "../../components/Upload";
+import { useNavigate } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -11,6 +13,15 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+  const navigate = useNavigate();
+  const handleUploadComplete = async (base64Image: string) => {
+    const newId = Date.now().toString();
+
+    navigate(`/visualizer/${newId}`);
+
+    return true;
+  };
+
   return (
     <div className="home">
       <Navbar />
@@ -52,7 +63,7 @@ export default function Home() {
               <p>Supports JPG, PNG, formats up to 10MB</p>
             </div>
 
-            <p>Upload images</p>
+            <Upload onComplete={handleUploadComplete}/>
           </div>
         </div>
       </section>
@@ -72,9 +83,9 @@ export default function Home() {
           <div className="projects-grid">
             <div className="project-card group">
               <div className="preview">
-                <img 
-                src="https://roomify-mlhuk267-dfwu1i.puter.site/projects/1770803585402/rendered.png" 
-                alt="Project"
+                <img
+                  src="https://roomify-mlhuk267-dfwu1i.puter.site/projects/1770803585402/rendered.png"
+                  alt="Project"
                 />
 
                 <div className="badge">
@@ -86,14 +97,14 @@ export default function Home() {
                 <div>
                   <h3>Project Germersheim</h3>
                   <div className="meta">
-                    <Clock size={12}/>
+                    <Clock size={12} />
                     <span>{new Date("01.01.2027").toLocaleDateString()}</span>
                     <span>By Blaise TAPPA</span>
                   </div>
                 </div>
 
                 <div className="arrow">
-                  <ArrowUpRight size={18}/>
+                  <ArrowUpRight size={18} />
                 </div>
               </div>
             </div>
