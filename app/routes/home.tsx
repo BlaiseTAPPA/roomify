@@ -37,13 +37,13 @@ export default function Home() {
       return false;
     }
 
-    setProjects((prev) => [newItem, ...prev]);
+    setProjects((prev) => [saved, ...prev]);
 
-    navigate(`/visualizer/${newId}`, {
+    navigate(`/visualizer/${saved.id}`, {
       state: {
         initialImage: saved.sourceImage,
         initialRendered: saved.renderedImage || null,
-        name,
+        name: saved.name || name,
       },
     });
 
