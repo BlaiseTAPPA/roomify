@@ -25,7 +25,9 @@ export const getOrCreateHostingConfig =
     try {
       const created = await puter.hosting.create(subdomain, ".");
 
-      return { subdomain: created.subdomain };
+      const record = { subdomain: created.subdomain };
+      await puter.kv.set(HOSTING_CONFIG_KEY, record);
+      return record;
     } catch (e) {
       console.warn(`Could not find subdomain : ${e}`);
       return null;
@@ -67,7 +69,7 @@ export const uploadImageToHosting = async ({
 
     return hostedUrl ? { url: hostedUrl } : null;
   } catch (e) {
-    console.warn(`Failed to store hosted iamge: ${e}`);
+    console.warn(`Failed to store hosted image: ${e}`);
     return null;
   }
 };
