@@ -1,4 +1,4 @@
-# Roomify 🏠✨
+# Roomify 
 
 > **An AI-first design environment that transforms 2D floor plans into photorealistic 3D architectural renders instantly.**
 
@@ -16,7 +16,7 @@ Roomify eliminates the need for complex, manual 3D modeling by leveraging genera
 
 ---
 
-## 🛠 Technology Stack
+##  Technology Stack
 
 - **Framework:** [React Router v7](https://reactrouter.com/) (TypeScript)
 - **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
@@ -27,7 +27,7 @@ Roomify eliminates the need for complex, manual 3D modeling by leveraging genera
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 roomify/
@@ -50,7 +50,7 @@ roomify/
 
 ---
 
-## 🏁 Getting Started
+##  Getting Started
 
 Because Roomify uses Puter.js as a Serverless Backend, there is **no need to configure a database, set up an auth provider, or manage API keys**. Puter handles this contextually in the browser.
 
@@ -81,7 +81,7 @@ Because Roomify uses Puter.js as a Serverless Backend, there is **no need to con
 
 ---
 
-## 🐳 Docker Deployment
+##  Docker Deployment
 
 Roomify includes a multi-stage `Dockerfile` optimized for minimal production builds.
 
@@ -95,7 +95,7 @@ docker run -p 3000:3000 roomify
 
 ---
 
-## 💡 How It Works
+##  How It Works
 
 1. **Authentication:** Users sign in seamlessly via the Puter.js overlay.
 2. **Upload:** A 2D floor plan (`.png` or `.jpg`) is dropped into the uploader. 
@@ -105,7 +105,7 @@ docker run -p 3000:3000 roomify
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! If you'd like to improve Roomify, please feel free to fork the repository, create a feature branch, and submit a Pull Request. 
 
@@ -117,6 +117,6 @@ Contributions are welcome! If you'd like to improve Roomify, please feel free to
 
 ---
 
-## 📝 License
+##  License
 
 Distributed under the MIT License. See `LICENSE` for more information.
