@@ -1,26 +1,38 @@
-import React, { useEffect, useRef, useState } from "react";
-import {  useNavigate, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext, useParams } from "react-router";
+import { useEffect, useRef, useState } from "react";
 import { generate3DView } from "../../lib/ai.actions";
 import { Box, Download, RefreshCcw, Share2, X } from "lucide-react";
 import Button from "../../components/ui/Button";
-import { useParams } from "react-router";
 import { createProject, getProjectById } from "../../lib/puter.action";
+import {
+  ReactCompareSlider,
+  ReactCompareSliderImage,
+} from "react-compare-slider";
 
 const VisualizerId = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  //const location = useLocation();
   const { userId } = useOutletContext<AuthContext>();
-  //const { initialImage, initialRender, name } = location.state || {};
 
   const hasInitialGenerated = useRef(false);
 
   const [project, setProject] = useState<DesignItem | null>(null);
   const [isProjectLoading, setIsProjectLoading] = useState(true);
+
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
 
   const handleBack = () => navigate("/");
+  const handleExport = () => {
+    if (!currentImage) return;
+
+    const link = document.createElement("a");
+    link.href = currentImage;
+    link.download = `roomify-${id || "design"}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const runGeneration = async (item: DesignItem) => {
     if (!id || !item.sourceImage) return;
@@ -32,31 +44,33 @@ const VisualizerId = () => {
       if (result.renderedImage) {
         setCurrentImage(result.renderedImage);
 
-        //update the project with the rendered image.
         const updatedItem = {
-          ...item, 
+          ...item,
           renderedImage: result.renderedImage,
           renderedPath: result.renderedPath,
-          timestamp: Date.now(), 
-          ownerId: item.ownerId ?? userId ?? null, 
-          isPublic: item.isPublic ?? false, 
-        }
+          timestamp: Date.now(),
+          ownerId: item.ownerId ?? userId ?? null,
+          isPublic: item.isPublic ?? false,
+        };
 
-        const saved = await createProject({item : updatedItem, visibility: "private"})
+        const saved = await createProject({
+          item: updatedItem,
+          visibility: "private",
+        });
 
-        if(saved){
+        if (saved) {
           setProject(saved);
           setCurrentImage(saved.renderedImage || result.renderedImage);
         }
       }
-    } catch (e) {
-      console.error("Generation failed: ", e);
+    } catch (error) {
+      console.error("Generation failed: ", error);
     } finally {
       setIsProcessing(false);
     }
   };
 
-useEffect(() => {
+  useEffect(() => {
     let isMounted = true;
 
     const loadProject = async () => {
@@ -107,6 +121,7 @@ useEffect(() => {
       <nav className="topbar">
         <div className="brand">
           <Box className="logo" />
+
           <span className="name">Roomify</span>
         </div>
         <Button variant="ghost" size="sm" onClick={handleBack} className="exit">
@@ -122,10 +137,11 @@ useEffect(() => {
               <h2>{project?.name || `Residence ${id}`}</h2>
               <p className="note">Created by You</p>
             </div>
+
             <div className="panel-actions">
               <Button
                 size="sm"
-                onClick={() => {}}
+                onClick={handleExport}
                 className="export"
                 disabled={!currentImage}
               >
@@ -166,9 +182,51 @@ useEffect(() => {
             )}
           </div>
         </div>
+
+        <div className="panel compare">
+          <div className="panel-header">
+            <div className="panel-meta">
+              <p>Comparison</p>
+              <h3>Before and After</h3>
+            </div>
+            <div className="hint">Drag to compare</div>
+          </div>
+
+          <div className="compare-stage">
+            {project?.sourceImage && currentImage ? (
+              <ReactCompareSlider
+                defaultValue={50}
+                style={{ width: "100%", height: "100%" }}
+                itemOne={
+                  <ReactCompareSliderImage
+                    src={project?.sourceImage}
+                    alt="before"
+                    className="compare-img"
+                  />
+                }
+                itemTwo={
+                  <ReactCompareSliderImage
+                    src={currentImage || project?.renderedImage}
+                    alt="after"
+                    className="compare-img"
+                  />
+                }
+              />
+            ) : (
+              <div className="compare-fallback">
+                {project?.sourceImage && (
+                  <img
+                    src={project.sourceImage}
+                    alt="Before"
+                    className="compare-img"
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </section>
     </div>
   );
 };
-
 export default VisualizerId;
